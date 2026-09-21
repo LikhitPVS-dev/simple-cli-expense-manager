@@ -16,6 +16,8 @@ def main():
                 view_expense()
             elif choice==3:
                 edit_expense()
+            elif choice==4:
+                delete_expense()
             elif choice==7:
                 print('you quit the program')
                 break        
@@ -132,7 +134,23 @@ def edit_expense():
                     print('-----------date changed succesfully-----------')
                 
 
-
+def delete_expense():
+    id_in=int(input('Enter the id of the expense you want to delete:'))
+    with open(file,'r') as File:
+        data=json.load(File)
+    flag=True
+    with open(file,'w') as File:
+        for d in data:
+            if d['id']==id_in:
+                data.remove(d)
+                flag=False
+                break
+        if flag:
+            print('data deletion failed ,id not found')
+        else:
+            print('------------data deletion successfull------------')
+        json.dump(data,File,indent=4)
+        
 
 
 
