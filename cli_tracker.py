@@ -14,6 +14,8 @@ def main():
                 add_expense()
             elif choice==2:
                 view_expense()
+            elif choice==3:
+                edit_expense()
             elif choice==7:
                 print('you quit the program')
                 break        
@@ -23,6 +25,7 @@ def main():
     return
 def add_expense():
     try:
+        id=int(input("enter a unique id for your expense(id should not equa to 0):"))
         amount=int(input('Enter the amount of expense you want to add:₹'))
         category=input('Enter the category of expense:')
         if category:
@@ -32,7 +35,7 @@ def add_expense():
                 date_=datetime.date.today()
             else:
                 date_=datetime.date.fromisoformat(date)
-            dict={'amount':amount,'category':category,'description':description,'date':str(date_)}
+            dict={'id':id,'amount':amount,'category':category,'description':description,'date':str(date_)}
             with open(file,'r') as File:
                 try:
                     data=json.load(File)
@@ -64,17 +67,75 @@ def view_expense():
     elif choice==2:
         with open (file,'r') as File:
             data=json.load(File)
-            date_in=input('Enter the date of expense(YEAR-MON-DATE):')
-            date_in = datetime.date.fromisoformat(date_in)
-            category_in=input("enter the catogory of expense:")
-            category_in.lower()
             flag=False
-            for _ in data:
-                if _['date']==str(date_in) and _['category']==category_in:
-                    print(json.dumps(_,indent=4))
-                    flag=True
-            if not flag:
-                print('expense not found')
+            id_in=int(input('enter id of the expense (if you foget id enter 0):'))
+            if id_in==0:
+                
+                date_in=input('Enter the date of expense(YEAR-MON-DATE):')
+                date_in = datetime.date.fromisoformat(date_in)
+                category_in=input("enter the catogory of expense:")
+                category_in.lower()
+                for _ in data:
+                    if _['date']==str(date_in) and _['category']==category_in:
+                        print(json.dumps(_,indent=4))
+                        flag=True
+                if not flag:
+                    print('expense not found')
+            else:
+                for _ in data:
+                    if _['id']==id_in:
+                        print(json.dumps(_,indent=4))
+                        flag=True
+                if not flag:
+                    print('id not found try again')
+
+def edit_expense():
+    id_in=int(input('enter the id of expense(0 to quit):'))
+    if id_in==0:
+        return
+    else:
+        with open(file,'r') as File:
+            data=json.load(File)
+        flag=True
+        for _ in data:
+            if _['id']==id_in:
+                flag=False
+        if flag:
+            print(f'----------id {id_in} not found!----------')
+            edit_expense()
+        while True:
+            choice=int(input("what data you want to change\n1.amount\n2.category\n3.description\n4.date\n0 to exit\n:"))
+            if (choice)==0:
+                break
+            elif choice<0 or choice>4:
+                print('please enter a valid chioce!')
+            else:
+                if choice==1:
+                    choice1='amount'
+                    change=int(input('Enter the new amount:'))
+                elif choice==4:
+                    choice1='date'
+                    change=input('Enter the new date:')
+                    change=datetime.date.fromisoformat(change)
+                elif choice==3:
+                    choice1='description'
+                    change=input('Enter the new description:')
+                else:
+                    choice1='category'
+                    change=(input('Enter the new category:'))
+                choice2=choice1
+                with open(file,'w') as File:
+                    for _ in data:
+                        if _['id']==id_in:
+                            _[choice2]=change
+                    json.dump(data,File,indent=4)
+                    print('-----------date changed succesfully-----------')
+                
+
+
+
+
+
 
             
 

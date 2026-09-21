@@ -1,11 +1,13 @@
 [
     {
-        "amount": 23,
+        "id": 1,
+        "amount": 56,
         "category": "f",
         "description": "h",
         "date": "2026-09-20"
     },
     {
+        "id": 2,
         "amount": 23,
         "category": "h",
         "description": "z",
