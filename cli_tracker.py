@@ -18,6 +18,8 @@ def main():
                 edit_expense()
             elif choice==4:
                 delete_expense()
+            elif choice==5:
+                search_expense()
             elif choice==7:
                 print('you quit the program')
                 break        
@@ -152,7 +154,14 @@ def delete_expense():
         json.dump(data,File,indent=4)
         
 
-
+def search_expense():
+    choice=(input('Enter the choice,on what basis do you want to search the expenses(amount,category,description,date):'))
+    with open(file,'r') as File:
+        data=json.load(File)
+    
+    sort_=int(input('in what order do you want your output\n1.increasing\n2.decreasing\n:'))
+    new_data=sorted(data,key=lambda expense:expense[choice],reverse=(sort_==2))
+    print(json.dumps(new_data,indent=4))
 
 
             
