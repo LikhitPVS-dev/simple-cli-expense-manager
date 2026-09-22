@@ -20,6 +20,8 @@ def main():
                 delete_expense()
             elif choice==5:
                 search_expense()
+            elif choice==6:
+                summary()
             elif choice==7:
                 print('you quit the program')
                 break        
@@ -162,18 +164,39 @@ def search_expense():
     sort_=int(input('in what order do you want your output\n1.increasing\n2.decreasing\n:'))
     new_data=sorted(data,key=lambda expense:expense[choice],reverse=(sort_==2))
     print(json.dumps(new_data,indent=4))
-
+def summary():
+    with open(file,'r') as File:
+        data=json.load(File)
+    print('---------------Here is the summary---------------')
+    max_amm=data[0]['amount']
+    min_amm=data[0]['amount']
+    tot=0
+    month=0
+    date=str(datetime.date.today())
+    dates=[]
+    dates_month=[]
+    category=set()
+    for i in data:
+        tot+=i['amount']
+        if i['amount']>max_amm:
+            max_amm=i['amount']
+        if i['amount']<min_amm:
+            min_amm=i['amount']
+        if date[:4]==i['date'][:4]:
+            month+=i['amount']
+            dates_month.append(i['date'])
+        dates.append(i['date'])
+        category.add(i['category'])
+    print('Total expenses : ₹',tot)
+    print('Max expense ever: ₹',max_amm)
+    print('Min expense ever: ₹',min_amm)
+    print('Dates of every expenses: ',dates)
+    print('Total expense of this month: ₹',month)
+    print('dates of expenses this month:',dates_month)
+    print('Every category of expense:',category)
+    
 
             
-
-
-
-
-
-
-
-
-
 
 if __name__=='__main__':
     main()
